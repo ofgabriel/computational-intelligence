@@ -1,0 +1,103 @@
+\documentclass{homework}
+
+\usepackage{tikz}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{systeme}
+\usepackage{enumitem}
+\usepackage{xcolor}
+
+\lstset
+{ %Formatting for code in appendix
+    basicstyle=\footnotesize,
+    numbers=left,
+    stepnumber=1,
+    showstringspaces=false,
+    tabsize=1,
+    breaklines=true,
+    breakatwhitespace=false,
+}
+\setlength{\parindent}{4em}
+
+\title{Inteligência Computacional --- COC 361\linebreak2021/2 \linebreak\linebreak Trabalho Computacional}
+\author{Gabriel de Oliveira da Fonseca, Gustavo Pires Machado}
+
+\begin{document}
+
+\maketitle
+
+\pagebreak
+
+\section{Introdução}
+
+\begin{itemize}
+\color{red}
+    \item Descrição do problema.
+    \item Pesquisa bibliográfica (opcional).
+\end{itemize}
+
+Para o presente trabalho, o conjunto de dados escolhido reúne dados coletados entre 1º de Julho de 2015 e 31 de Agosto
+de 2017 por uma rede hoteleira que incluem diversos atributos relacionados às reservas efetuadas por seus clientes.
+Utilizando-se das diversas metodologias de Inteligência Computacional discutidas ao longo do curso, o trabalho tem por
+objetivo a construção de um modelo de classifcação para a previsão de reservas canceladas. A partir deste modelo,
+espera-se que a rede hoteleira possa se beneficiar de uma maior previsibilidade das reservas que serão efetivamente
+concretizadas, aumentando por fim sua margem de lucro.
+
+\section{Dataset e Tecnologia}
+
+\begin{itemize}
+\color{red}
+    \item Descrição dos Dados.
+    \item Apresentação da tecnologia.
+\end{itemize}
+
+O dataset escolhido possui 36 colunas e foi retirado da plataforma Kaggle \cite{kaggle}. Conforme disposto na tabela
+abaixo, 20 dessas colunas são numéricas, e portanto 16 categóricas.
+
+** tabela com as colunas.
+
+\section{Metodologia}
+
+\begin{itemize}
+    \color{red}
+        \item Apresentação da solução do problema proposto.
+        \item Descrição teórica (matemática) dos modelos utilizados.
+\end{itemize}
+
+\section{Resultados}
+
+\begin{itemize}
+    \color{red}
+        \item Visualização e Caracterização dos dados (distribuições, correlações, etc.)
+        \item Descrição do procedimento de validação (validação cruzada)
+        \item Resultados dos modelos lineares:
+            \begin{enumerate}
+                \item Regressão Linear / Regressão Logística
+                \item Classificação Bayesiana (problemas de classificação)
+            \end{enumerate}
+        \item Resultados dos modelos não lineares
+            \begin{enumerate}
+                \item Árvores de decisão
+                \item Random Forest (testar pelo menos 2 opções de hiperparâmetros)
+                \item Gradient Boosting (testar pelo menos 2 opções de hiperparâmetros)
+                \item SVM (testar pelo menos 2 opções de hiperparâmetros)
+                \item Redes Neurais (testar pelo menos 3 topologias/hiperparâmetros)
+            \end{enumerate}
+        \item Discussão e comparação dos resultados
+\end{itemize}
+
+\section{Conclusões}
+
+\begin{itemize}
+    \color{red}
+        \item Discussão sobre as características do problema
+        \item Discussão dos resultados obtidos em função das características do problema
+        \item Recomendação sobre o melhor modelo para a aplicação
+        \item Trabalhos futuros (opcional)
+\end{itemize}
+
+\begin{thebibliography}{1}
+    \bibitem{kaggle} \url{https://www.kaggle.com/mojtaba142/hotel-booking}. Acessado em 20/02/2022.
+\end{thebibliography}
+
+\end{document}
