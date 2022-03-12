@@ -58,7 +58,7 @@ determinado cliente já cancelou reservas anteriormente.
 Um outro importante aspecto a ser analisado diz respeito à qual classe pertence o conjunto de dados: balanceada ou
 desbalanceada. Isso pode ser visto através da predominância das classes alvo, que nesse estudo são as reservas
 canceladas ou não. Contando cada uma das classes, chegamos à proporção de 39\% das reservas canceladas para 61\% não
-canceladas. Dessa forma, podemos concluir que o dataset é desbalanceado.
+canceladas. Dessa forma, conclui-se que o dataset é razoavelmente balanceado.
 
 Além disso, conforme disposto na tabela abaixo, 20 de suas colunas são numéricas, e portanto 16 categóricas.
 
@@ -188,9 +188,9 @@ Onde,
     \hat{v}(t) = \frac{1}{1+e^{-\theta T x}}
 \end{equation}
 
-Pela equação (3.2), podemos observar que quando $v(t) = 0$, apenas o segundo termo do somatório prevalece e o custo
+Pela equação (3.2), observa-se que quando $v(t) = 0$, apenas o segundo termo do somatório prevalece e o custo
 tende a infinito ($log(0)$) no caso em que $\hat{v}(t) = 1$. Situação similar ocorre quando $v(t) = 1$ e $\hat{v}(t)=0$.
-Sabendo que esta função objetivo determina o erro entre a classe predita e a classe observada, podemos minimizá-la
+Sabendo que esta função objetivo determina o erro entre a classe predita e a classe observada, pode-se minimizá-la
 utilizando métodos de PNL como o do gradiente. Dessa forma, construímos uma superfície de separação entre as classes,
 discriminada por uma curva sigmóide, como dado pela equação (3.3).
 
@@ -222,7 +222,7 @@ para regressão. De forma ampla, buscam definir um modelo de predição através
 atributos do dataset. São chamadas de árvore pois o modelo é construído como um diagrama de decisão, cuja representação
 é similar a uma árvore, conforme ilustrado abaixo:
 
-\begin{figure}[htbp]
+\begin{figure}[h!]
     \centerline{\includegraphics[scale=2]{decision_tree.png}}
     \label{decision_tree}
     \caption{Exemplo de Árvore de Decisão \cite{decision_tree}}
@@ -296,17 +296,28 @@ mais distantes e mais generalista o modelo.
 
 \subsection{Visualização e Caracterização dos dados}
 
-\begin{figure}[htbp]
-    \centerline{\includegraphics[scale=2]{decision_tree.png}}
-    \label{decision_tree}
-    \caption{Exemplo de Árvore de Decisão \cite{decision_tree}}
+Conforme apresentado na matriz de variáveis nulas (figura \ref{null_matrix}), algumas colunas como \textit{agent} e
+\textit{company} possuem entradas com valores nulos, cuja manutenção afetaria as análises efetuadas. Como a variável que
+define a empresa associada à reserva é nula em 94\% das entradas, optou-se por removê-la. Aproveitou-se também para
+remover variáveis intuitivamente irrelevantes para o modelo, como nome, e-mail e telefone. Após isso, foi possível
+remover todas as entradas contendo valores nulos, já que representavam uma pequena parte do dataset utilizado
+($\approx10\%$).
+
+\begin{figure}[h!]
+    \centerline{\includegraphics[scale=0.3]{null_matrix.png}}
+    \caption{Matriz de variáveis nulas.}
+    \label{null_matrix}
 \end{figure}
 
-Conforme apresentado na tabela \ref{attributes}, algumas colunas como \textit{agent} e \textit{company} possuem entradas
-com valores nulos, cuja manutenção afetaria as análises efetuadas. Como a variável que define a empresa associada à
-reserva é nula em 94\% das entradas, optou-se por removê-la. Aproveitou-se também para remover variáveis intuitivamente
-irrelevantes para o modelo, como nome, e-mail e telefone. Após isso, foi possível remover todas as entradas contendo
-valores nulos, já que representavam uma pequena parte do dataset utilizado ($\approx10\%$).
+A figura \ref{heatmap} apresenta a matriz de correlação dos atributos, pela qual observa-se a
+ausência de fortes correlações, exceto entre as variáveis \textit{arrival\_date\_week\_number} e
+\textit{arrival\_date\_year}.
+
+\begin{figure}[h!]
+    \centerline{\includegraphics[scale=0.25]{heatmap.png}}
+    \caption{Matriz de correlação de atributos.}
+    \label{heatmap}
+\end{figure}
 
 Como uma etapa de engenharia de atributos, optou-se por tratar algumas informações pouco relevantes para o modelo em sua
 forma original. Para isso, um novo atributo de localização (\textit{guest\_location}) foi criado para substituir o
@@ -318,8 +329,23 @@ provenientes de Portugal era inicialmente muito maior que as de outros países i
 
 Após as modificações citadas acima, realizou-se o procedimento de conversão de variáveis categóricas para variáveis
 indicadoras. Por exemplo, a variável \textit{meal} foi dividida em 4 novas variáveis: \textit{meal\_FB}, \textit{meal\_HB},
-\textit{meal\_SC} e \textit{meal\_Undefined}, que representam as diferentes possibilidades de refeições a serem escolhidas
-pelos clientes.
+\textit{meal\_SC} e \textit{meal\_Undefined}, que representam as diferentes possibilidades de refeições a serem
+escolhidas pelos clientes.
+
+Logo após a etapa de tratamento das variáveis, como tarefa de pré-processamento e com o objetivo de ajustar as escalas
+das diferentes variáveis, padronizou-se o dataset. Para isso, foi utilizada a funcionalidade de \texttt{StandardScaler}
+do \textit{scitkit learn} \cite{standard_scaler}. Sendo assim, prosseguiu-se para a spearação dos subconjuntos de
+treinamento e testes e posterior treinamento dos modelos, cujos resultados são apresentados nas subseções a seguir.
+
+Antes de apresentar os resultados dos treinamentos propriamente ditos, é importante ressaltar o procedimento de
+validação adotado. Essencialmente, foi utilizada a técnica de validação cruzada, que consiste na divisão do conjunto de
+treinamento em $n$ subjconjuntos, os quais são utilizados para treinar os modelos $n$ vezes, validando o modelo para
+diferentes entradas e gerando estatísticas que permitem avaliar seu comportamento de forma mais aprofundada. Tal técnica
+é especialmente relevante para os modelos que disponibilizam hiperparâmetros, pois permite avaliar diferentes conjuntos
+de hiperparâmetros e decidir o que propicia o melhor modelo. Para o caso de modelos com hiperparâmetros, utilizou-se a
+função de \texttt{GridSearchCV} do \textit{scikit learn} \cite{grid_search_cv}, que possibilita a definição de uma
+matriz de hiperparâmetros a serem estudados. Para todas as validações cruzadas foi utilizado o mesmo split e a mesma
+semente de randomização.
 
 \begin{itemize}
     \color{red}
@@ -341,6 +367,180 @@ pelos clientes.
         \item Discussão e comparação dos resultados
 \end{itemize}
 
+\subsection{Métricas de comparação}
+
+Diversas métricas foram calculadas para comparar os modelos, as quais estão descritas abaixo, onde  $VP$, $VN$, $FP$ e
+$FN$ representam, respectivamente, os verdadeiros positivos, verdadeiros negativos, falso positivos e falso negativos.
+
+\begin{itemize}
+    \item \textbf{Acurácia}: dentre todas as classificações, quantas o modelo classificou corretamente. É calculada pela
+    seguinte equação:
+    \begin{equation}
+        A = \frac{VP + FN}{VP + VN + FP + FN}
+    \end{equation}
+    \item \textbf{Precisão}: dentre todas as classificações positivas que o modelo fez, quantas são de fato positivas. É
+    calculada pela seguinte equação:
+    \begin{equation}
+        P = \frac{VP}{VP + FP}
+    \end{equation}
+    \item \textbf{Revocação}: dentre todos os registros que são de fato positivos, quantos o modelo classificou como
+    positivo. Dada pela seguinte equação:
+    \begin{equation}
+        R = \frac{VP}{VP + FN}
+    \end{equation}
+    \item \textbf{F1-score}: média harmônica entre precisão e revocação. Dado pela seguinte equação:
+    \begin{equation}
+        F1 = \frac{2*P*R}{P+R}
+    \end{equation}
+\end{itemize}
+
+Dentre as estatísticas apresentadas acima, adotou-se o \textit{F1-score} como métrica de comparação entre os diferentes
+modelos. Isso, pois ele indica a capacidade do modelo apresentar uma boa sensibilidade sem prejudicar a precisão e
+vice-versa. À princípio, havia-se adotado a acurácia como métrica de comparação, mas acabou-se rejeitando-a por conta do
+pequeno desbalanceamento apresentado pelo dataset, o que faz com quê a acurácia seja tendenciosa para a classe dominante.
+
+\subsection{Modelos lineares}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+            & \textbf{Regressão Logística} & \textbf{Classificação Bayesiana} \\
+        \hline
+        \textbf{Precisão} & $0.794 \pm 0.005$ & $0.700 \pm 0.005$ \\
+        \hline
+        \textbf{F1-score} & $0.788 \pm 0.005$ & $0.484 \pm 0.005$ \\
+        \hline
+        \textbf{Acurácia} & $0.793 \pm 0.005$ & $0.526 \pm 0.005$ \\
+        \hline
+        \textbf{Recall} & $0.793 \pm 0.005$ & $0.526 \pm 0.005$ \\
+        \hline
+    \end{tabular}
+    \caption{Resultados para modelos lineares.}
+    \label{linear_results}
+\end{table}
+
+A tabela \ref{linear_results} apresenta os resultados para os modelos lineares de Regressão Logística e Classificação
+Bayesiana. Como observa-se, o segundo teve uma performance muito baixa, com \textit{F1-score} de apenas $0.484$.
+Isso é esperado dada a característica da Classificação Bayesiana de considerar apenas as probabilidades condicionais
+individuais de cada atributo e a variável alvo, ignorando portanto as correlações entre os atributos. A regressão
+logística também apresentou performance elevada, com \textit{F1-score} de $0.788$, indicando que a superfície de decisão
+do problema não é bem aproximada por um sistema linear.
+
+Como os modelos lineares estudados não disponibilizam hiperparâmetros, não há mais discussões a serem feitas sobre eles.
+
+\subsection{Modelos não lineares}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+            & \textbf{Árvore de decisão} & \textbf{Random Forest} & \textbf{Gradient Boosting} \\
+        \hline
+        \textbf{Precisão} & $0.779 \pm 0.009$ & $0.993 \pm 0.005$ & $0.765 \pm 0.005$ \\
+        \hline
+        \textbf{F1-score} & $0.764 \pm 0.013$ & $0.995 \pm 0.005$ & $0.802 \pm 0.005$ \\
+        \hline
+        \textbf{Acurácia} & $0.772 \pm 0.008$ & $0.996 \pm 0.005$ & $0.853 \pm 0.005$ \\
+        \hline
+        \textbf{Recall} & $0.772 \pm 0.008$ & $0.996 \pm 0.005$ & $0.844 \pm 0.005$ \\
+        \hline
+    \end{tabular}
+\end{table}
+\begin{table}[h!]
+\centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+            & \textbf{SVM} & \textbf{Redes Neurais} \\
+        \hline
+        \textbf{Precisão} & $0.824 \pm 0.005$ & $0.828 \pm 0.005$ \\
+        \hline
+        \textbf{F1-score} & $0.850 \pm 0.005$ & $0.849 \pm 0.005$ \\
+        \hline
+        \textbf{Acurácia} & $0.886 \pm 0.005$ & $0.885 \pm 0.005$ \\
+        \hline
+        \textbf{Recall} & $0.877 \pm 0.005$ & $0.885 \pm 0.005$ \\
+        \hline
+    \end{tabular}
+    \caption{Resultados para modelos não lineares.}
+    \label{non_linear_results}
+\end{table}
+
+A tabela \ref{non_linear_results} apresenta os resultados para os modelos não lineares estudados. Observa-se que a
+performance demonstrada é consideravelmente superior que as apresentadas pelos modelos lineares, confirmando a
+suspeita do final da subseção anterior de que o problema é melhor aproximado por uma superfície de decisão não linear.
+O único modelo cujo treinamento não envolveu estudo de hiperparâmetrosdo foi o de Árvore de Decisão. Para os outros, os
+resultados e estudo de hiperparâmetros será feito a seguir.
+
+Para o treinamento da Random Forest, variou-se o número de estimadores utilizados para sua construção, que é basicamente
+o número de árvores de decisão combinadas. Os dois valores utilizados foram de 10 e 100 estimadores, que apresentaram
+respectivamente, \textit{F1-score} médio na validação cruzada de $0.871 \pm 0.003$ e $0.881 \pm 0.002$. Como era
+esperado, o aumento do número de estimadores aumenta a performance do modelo, mas prejudica o tempo de treinamento. Com
+isso, o modelo utilizado para a comparação foi o com 100 estimadores.
+
+Já para o Gradient Boosting, o estudo dos hiperparâmetros envolveu uma maior variedade, que são apresentados na tabela
+\ref{gb_hiperparams}, disponível abaixo.
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \textbf{Número de estimadores} & \textbf{Taxa de aprendizado} & \textbf{Subamostras} & \textbf{F1-score médio} \\
+        \hline
+        10 & $0.1$ & $0.5$ & $0.713 \pm 0.008$ \\
+        \hline
+        10 & $0.1$ & $1.0$ & $0.713 \pm 0.011$ \\
+        \hline
+        10 & 1 & $0.5$ & $0.828 \pm 0.003$ \\
+        \hline
+        10 & 1 & $1.0$ & $0.830 \pm 0.003$ \\
+        \hline
+        100 & $0.1$ & $0.5$ & $0.840 \pm 0.003$ \\
+        \hline
+        100 & $0.1$ & $1.0$ & $0.839 \pm 0.002$ \\
+        \hline
+        100 & 1 & $0.5$ & $0.850 \pm 0.004$ \\
+        \hline
+        100 & 1 & $1.0$ & $0.857 \pm 0.005$ \\
+        \hline
+    \end{tabular}
+    \caption{Validação cruzada de hiperparâmetros para Gradient Boosting.}
+    \label{gb_hiperparams}
+\end{table}
+
+Observa-se, portanto, que o melhor conjunto de hiperparâmetros é dado por número de estimadores = 100, taxa de
+aprendizado = 1 e Subamostras = 1. Isso faz sentido, pois um maior número de estimadores tende a aumentar a acurácia do
+modelo, e a taxa de aprendizado funciona como uma penalidade para cada árvore de decisão que compõe o modelo.
+
+Para o modelo de SVM, não foi possível realizar um estudo muito aprofundado dos hiperparâmetros, pois o tempo de
+treinamento de cada modelo foi muito elevado para o conjunto de treinamento utilizado, que é consideravelmente grande.
+Portanto, variou-se apenas o hiperparâmetro C, para o qual adotou-se o valor de 1 e 100, obtendo-se respectivamente
+\textit{F1-score} médio de $0.841 \pm 0.001$ e $0.850 \pm 0.002$. Logo, o aumento de C levou a uma melhor acurácia, o
+que pode se justificar pelo fato de que este hiperparâmetro funciona como regularizador, definindo a margem utilizada
+pelo modelo para determinar o quanto de erro é aceitável. Logo, quanto maior C, mais pontos são classificados.
+Importante se atentar que um aumento indiscriminado de C pode levar a uma eventual perda de acurácia com ocorrência de
+overfitting.
+
+Por fim, para o modelo de Redes Neurais foram testadas diferentes topologias, cujas descrições e resultados de
+\textit{F1-score} médio são apresentados na tabela \ref{nn_topology}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \textbf{Número de estimadores} & \textbf{Taxa de aprendizado} \\
+        \hline
+        Largura 12, 1 camada escondida & $0.1$ \\
+        \hline
+        Largura 133, 2 camadas escondidas & $0.011$ \\
+        \hline
+        Largura 133, 5 camadas escondidas & $0.828 \pm 0.003$ \\
+        \hline
+    \end{tabular}
+    \caption{Resultados para modelos não lineares.}
+    \label{nn_topology}
+\end{table}
+
 \section{Conclusões}
 
 \begin{itemize}
@@ -355,8 +555,10 @@ pelos clientes.
     \bibitem{kaggle} \url{https://www.kaggle.com/mojtaba142/hotel-booking}. Acessado em 20/02/2022.
     \bibitem{colab} \url{https://colab.research.google.com/}.
     \bibitem{evsukoff} Evsukoff, A. Ensinando Máquinas, 2017.
-    \bibitem{decision\_tree} M. Wagner, H. Principles of Operations Research, 1975.
+    \bibitem{decision_tree} M. Wagner, H. Principles of Operations Research, 1975.
     \bibitem{random_forest} \url{https://en.wikipedia.org/wiki/Random_forest}.
+    \bibitem{standard_scaler} \url{https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html}.
+    \bibitem{grid_search_cv} \url{https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html}.
 \end{thebibliography}
 
 \end{document}
