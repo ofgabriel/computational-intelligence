@@ -522,7 +522,9 @@ Importante se atentar que um aumento indiscriminado de C pode levar a uma eventu
 overfitting.
 
 Por fim, para o modelo de Redes Neurais foram testadas diferentes topologias, cujas descrições e resultados de
-\textit{F1-score} médio são apresentados na tabela \ref{nn_topology}
+\textit{F1-score} médio são apresentados na tabela \ref{nn_topology}. Para as 3 tropologias adotadas, utilizou-se
+otimizador \textit{Adam}, função de custo de Entropia Cruzada Binária e regularizadores do tipo L2 a fim de evitar
+overfitting e consequente perda de acurácia.
 
 \begin{table}[h!]
     \centering
@@ -530,11 +532,11 @@ Por fim, para o modelo de Redes Neurais foram testadas diferentes topologias, cu
         \hline
         \textbf{Número de estimadores} & \textbf{Taxa de aprendizado} \\
         \hline
-        Largura 12, 1 camada escondida & $0.1$ \\
+        Largura 12, 1 camada escondida & $0.774 \pm 0.003$ \\
         \hline
-        Largura 133, 2 camadas escondidas & $0.011$ \\
+        Largura 133, 2 camadas escondidas & $0.790 \pm 0.003$ \\
         \hline
-        Largura 133, 5 camadas escondidas & $0.828 \pm 0.003$ \\
+        Largura 133, 5 camadas escondidas & $0.784 \pm 0.002$ \\
         \hline
     \end{tabular}
     \caption{Resultados para modelos não lineares.}
