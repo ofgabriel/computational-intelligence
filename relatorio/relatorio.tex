@@ -453,13 +453,13 @@ Como os modelos lineares estudados não disponibilizam hiperparâmetros, não h�
         \hline
             & \textbf{SVM} & \textbf{Redes Neurais} \\
         \hline
-        \textbf{Precisão} & $0.824 \pm 0.005$ & $0.828 \pm 0.005$ \\
+        \textbf{Precisão} & $0.824 \pm 0.005$ & $0.843 \pm 0.005$ \\
         \hline
-        \textbf{F1-score} & $0.850 \pm 0.005$ & $0.849 \pm 0.005$ \\
+        \textbf{F1-score} & $0.850 \pm 0.005$ & $0.790 \pm 0.005$ \\
         \hline
-        \textbf{Acurácia} & $0.886 \pm 0.005$ & $0.885 \pm 0.005$ \\
+        \textbf{Acurácia} & $0.886 \pm 0.005$ & $0.850 \pm 0.005$ \\
         \hline
-        \textbf{Recall} & $0.877 \pm 0.005$ & $0.885 \pm 0.005$ \\
+        \textbf{Recall} & $0.877 \pm 0.005$ & $0.755 \pm 0.005$ \\
         \hline
     \end{tabular}
     \caption{Resultados para modelos não lineares.}
@@ -528,7 +528,7 @@ overfitting e consequente perda de acurácia.
 
 \begin{table}[h!]
     \centering
-    \begin{tabular}{|c|c|c|c|}
+    \begin{tabular}{|c|c|}
         \hline
         \textbf{Número de estimadores} & \textbf{Taxa de aprendizado} \\
         \hline
@@ -539,11 +539,46 @@ overfitting e consequente perda de acurácia.
         Largura 133, 5 camadas escondidas & $0.784 \pm 0.002$ \\
         \hline
     \end{tabular}
-    \caption{Resultados para modelos não lineares.}
+    \caption{Validação cruzada de hiperparâmetros para Rede Neural.}
     \label{nn_topology}
 \end{table}
 
+Nesse caso, concluiu-se que a topologia onde foi utilizada largura de 133 e 2 camadas escondidas foi a que apresentou
+melhor performance. A conclusão a que chegamos foi de que o aumento do número de camadas internas, bem como da largura
+da rede neural foi inicialmente benéfico, mas ao seguir com o aumento ocasiona-se a ocorrência de overfitting e perda
+de acurácia devido à construção de caminhos complexos pouco eficientes.
+
 \section{Conclusões}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|c|c|}
+        \hline
+        \textbf{Modelo} & \textbf{Melhor \textit{F1-score}} \\
+        \hline
+        Random Forest & $0.995 \pm 0.005$ \\
+        \hline
+        SVM & $0.850 \pm 0.005$ \\
+        \hline
+        Gradient Boosting & $0.802 \pm 0.005$ \\
+        \hline
+        Redes Neurais & $0.790 \pm 0.005$ \\
+        \hline
+        Regressão Logística & $0.788 \pm 0.005$ \\
+        \hline
+        Árvore de Decisão & $0.764 \pm 0.013$ \\
+        \hline
+        Classificação Bayesiana & $0.484 \pm 0.005$ \\
+        \hline
+    \end{tabular}
+    \caption{Resumo de resultados dos diferentes modelos treinados.}
+    \label{compiled_results}
+\end{table}
+
+A partir da tabela \ref{compiled_results}, conclui-se que o modelo que apresentou a melhor performance (avaliada através
+da métrica de \textit{F1-score}) foi o de Random Forest. Além disso, os 4 melhores modelos treinados foram do tipo
+não-linear, o que leva à conclusão de que a superfície de decisão do problema em questão é melhor ajustada por um
+sistema não-linear.
 
 \begin{itemize}
     \color{red}
