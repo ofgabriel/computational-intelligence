@@ -6,6 +6,7 @@
 \usepackage{systeme}
 \usepackage{enumitem}
 \usepackage{xcolor}
+\usepackage{indentfirst}
 
 \lstset
 { %Formatting for code in appendix
@@ -28,32 +29,19 @@
 
 \section{Introdução}
 
-\begin{itemize}
-\color{red}
-    \item Descrição do problema.
-    \item Pesquisa bibliográfica (opcional).
-\end{itemize}
-
 Para o presente trabalho, o conjunto de dados escolhido reúne dados coletados entre 1º de Julho de 2015 e 31 de Agosto
 de 2017 por uma rede hoteleira que incluem diversos atributos relacionados às reservas efetuadas por seus clientes.
 Utilizando-se das diversas metodologias de Inteligência Computacional discutidas ao longo do curso, o trabalho tem por
 objetivo a construção de um modelo de classifcação para a previsão de reservas canceladas. A partir deste modelo,
 espera-se que a rede hoteleira possa se beneficiar de uma maior previsibilidade das reservas que serão efetivamente
-concretizadas, aumentando por fim sua margem de lucro.
+concretizadas, por fim aumentando sua margem de lucro.
 
 \section{Dataset e Tecnologia}
 
-\begin{itemize}
-\color{red}
-    \item Descrição dos Dados.
-    \item Apresentação da tecnologia.
-\end{itemize}
-
 O dataset escolhido possui 36 colunas, foi retirado da plataforma Kaggle \cite{kaggle}, e conta com $119390$ entradas. 
-De forma geral, está razoavelmente organizado e possui um baixo número de dados faltantes (nulos). Os dados presentes
-compreendem diversos aspectos relacionados às reservas, como número de hóspedes em diferentes faixas etárias, dados
+Os dados presentes compreendem diversos aspectos relacionados às reservas, como número de hóspedes em diferentes faixas etárias, dados
 pessoais dos clientes (como nome, e-mail e telefone), além de nuances mais promissoras, como indicadores de que um
-determinado cliente já cancelou reservas anteriormente.
+determinado cliente já cancelou reservas anteriormente. De forma geral, este dataset se encontra razoavelmente organizado e possui um baixo número de dados faltantes (nulos).
 
 Um outro importante aspecto a ser analisado diz respeito à qual classe pertence o conjunto de dados: balanceada ou
 desbalanceada. Isso pode ser visto através da predominância das classes alvo, que nesse estudo são as reservas
@@ -62,6 +50,7 @@ canceladas. Dessa forma, conclui-se que o dataset é razoavelmente balanceado.
 
 Além disso, conforme disposto na tabela abaixo, 20 de suas colunas são numéricas, e portanto 16 categóricas.
 
+\newpage
 \begin{table}[h!]
 \centering
     \begin{tabular}{|c|c|c|c|}
@@ -145,20 +134,13 @@ Além disso, conforme disposto na tabela abaixo, 20 de suas colunas são numéri
     \label{attributes}
 \end{table}
 
-Já em relação às tecnologias utilizadas para a implementação da solução deste trabalho, foram adotadas essencialmente a
+Em relação às tecnologias utilizadas para a implementação da solução deste trabalho, foram adotadas essencialmente a
 plataforma Google Collaboratory \cite{colab}, onde o trabalho foi desenvolvido no formato de um notebook Jupyter, e
-diversas bibiliotecas em Python. Dentre as bibliotecas utilizadas, vale citar a Pandas, que implementa abstrações para
+diversas bibiliotecas em Python. Dentre as bibliotecas utilizadas, vale citar o Pandas, que implementa abstrações para
 facilitar o manuseio de data frames, bem como Scikit-Learn, que disponibiliza uma vasta gama de ferramentas para
-visualização de dados e treinamento de modelos. Especificamente, também foi utilizada a API Keras do TensorFlow, que foi
-utilizada no treinamento dos modelos de redes neurais.
+visualização de dados e treinamento de modelos. Especificamente, também foi utilizada a API Keras do TensorFlow para o treinamento dos modelos de redes neurais.
 
 \section{Metodologia}
-
-\begin{itemize}
-    \color{red}
-        \item Apresentação da solução do problema proposto.
-        \item Descrição teórica (matemática) dos modelos utilizados.
-\end{itemize}
 
 A solução construída para o problema consistiu na implementação de um ferramental de modelos de classificação baseados
 em diversos algoritmos apresentados ao longo da disciplina de Inteligência Computacional. Como tarefa preliminar,
@@ -289,6 +271,14 @@ mais distantes e mais generalista o modelo.
 
 \subsection{Redes Neurais}
 
+O método de Redes Neurais se inspira em uma das mais complexas máquinas existentes no mundo real, o cérebro humano. Ao pensarmos no cérebro humano, pensamos em como os neurônios são responsáveis pela recepção e transmissão de informações. Em redes neurais, o neurônio artificial, conhecido como Perceptron, é responsável pela recepção de diversas entradas, tais são multiplicadas por diferentes pesos e esse valores somados. A partir da soma ponderada, tal valor é posto sob uma função de ativação para gerar uma saída. Basicamente, essas funções de ativação definem se o neurônio dever ser ativado ou não. Alguns exemplos de funcão de ativação são a função linear, função retificadora linear(relu), função tangente hiperbólica (tanH), sigmóide, etc. As redes neurais possuem camadas e essas são conectadas de forma que as suas conexões formam uma rede que realizam o processamento da saída. Para problemas mais complexos e não linearmente separáveis, é possível utilizar de múltiplas camadas chamada de perceptron multicamadas, Multilayer Perceptron (MLP).
+
+No treinamento, os pesos gerados de forma aleatória são ajustados de forma a tornar o modelo um bom aproximador da função que gera a saída. A divergência entre a saída do modelo e o valor esperado é indicada pela função de avaliação que vai ser minimizada. Contudo, ao tratarmos de rede neurais lidamos como uma quantidade grande parâmetros que precisam ser ajustados o que ocasiona numa maior complexidade e custo computacional. A partir do método gradiente, em cada iteração são calculados os pesos que possuem uma direção de redução da função avaliadora que vai ser otimizada. O ajuste feito para os pesos em cada iteração são propagados para as camadas anteriores, de forma que em toda iteração teremos o reajuste dos pesos anteriores. Essa caracteristica do algoritmo de backpropagation possbilita um ajuste de uma grande quantidade de parametros de forma menos custosa e obtendo um erro mínimo.
+
+A taxa de aprendizado possui uma forte influêcia no comportamento do treinamento de uma rede neural e tal indica o tamanho do passo no ajuste dos parãmetros de cada iteração presente no método do gradiente. Caso esse parâmetro seja muito baixo, o aprendizado da rede vai ser lento; enquanto se esse parametro for muito alto, podemos ter a presença de oscilações no treinamento que impossibilitam a convergência no aprendizado. Existem otimizadores que usam de uma taxa de aprendizado adaptativa, de forma que a convergência seja garantida sem a necessidade de tempos muito grandes. Um exemplo desse tipo de otimizador é o Adam. 
+
+Não existe uma bala de prata quando tratamos da melhor topologia de rede para os diversos problemas, logo cada problema é um problma e a topologia mais adequada deve ser obtida através de meios empíricos. 
+
 
 
 \section{Resultados}
@@ -339,33 +329,13 @@ treinamento e testes e posterior treinamento dos modelos, cujos resultados são 
 
 Antes de apresentar os resultados dos treinamentos propriamente ditos, é importante ressaltar o procedimento de
 validação adotado. Essencialmente, foi utilizada a técnica de validação cruzada, que consiste na divisão do conjunto de
-treinamento em $n$ subjconjuntos, os quais são utilizados para treinar os modelos $n$ vezes, validando o modelo para
+treinamento em $n$ subconjuntos, os quais são utilizados para treinar os modelos $n$ vezes, validando o modelo para
 diferentes entradas e gerando estatísticas que permitem avaliar seu comportamento de forma mais aprofundada. Tal técnica
 é especialmente relevante para os modelos que disponibilizam hiperparâmetros, pois permite avaliar diferentes conjuntos
 de hiperparâmetros e decidir o que propicia o melhor modelo. Para o caso de modelos com hiperparâmetros, utilizou-se a
 função de \texttt{GridSearchCV} do \textit{scikit learn} \cite{grid_search_cv}, que possibilita a definição de uma
 matriz de hiperparâmetros a serem estudados. Para todas as validações cruzadas foi utilizado o mesmo split e a mesma
 semente de randomização.
-
-\begin{itemize}
-    \color{red}
-        \item Visualização e Caracterização dos dados (distribuições, correlações, etc.)
-        \item Descrição do procedimento de validação (validação cruzada)
-        \item Resultados dos modelos lineares:
-            \begin{enumerate}
-                \item Regressão Linear / Regressão Logística
-                \item Classificação Bayesiana (problemas de classificação)
-            \end{enumerate}
-        \item Resultados dos modelos não lineares
-            \begin{enumerate}
-                \item Árvores de decisão
-                \item Random Forest (testar pelo menos 2 opções de hiperparâmetros)
-                \item Gradient Boosting (testar pelo menos 2 opções de hiperparâmetros)
-                \item SVM (testar pelo menos 2 opções de hiperparâmetros)
-                \item Redes Neurais (testar pelo menos 3 topologias/hiperparâmetros)
-            \end{enumerate}
-        \item Discussão e comparação dos resultados
-\end{itemize}
 
 \subsection{Métricas de comparação}
 
@@ -469,7 +439,7 @@ Como os modelos lineares estudados não disponibilizam hiperparâmetros, não h�
 A tabela \ref{non_linear_results} apresenta os resultados para os modelos não lineares estudados. Observa-se que a
 performance demonstrada é consideravelmente superior que as apresentadas pelos modelos lineares, confirmando a
 suspeita do final da subseção anterior de que o problema é melhor aproximado por uma superfície de decisão não linear.
-O único modelo cujo treinamento não envolveu estudo de hiperparâmetrosdo foi o de Árvore de Decisão. Para os outros, os
+O único modelo cujo treinamento não envolveu estudo de hiperparâmetros foi o de Árvore de Decisão. Para os outros, os
 resultados e estudo de hiperparâmetros será feito a seguir.
 
 Para o treinamento da Random Forest, variou-se o número de estimadores utilizados para sua construção, que é basicamente
